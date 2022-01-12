@@ -17,11 +17,47 @@ async function submitTimesheet() {
 
     const page = await browser.newPage();
 
+    // const rawToday = new Date();
+    // const today = rawToday.getFullYear() + "-" + ( rawToday.getMonth() +1 ) + "-" + rawToday.getDate();
+
     const rawToday = new Date();
-    const today = rawToday.getFullYear() + "-" + ( rawToday.getMonth() +1 ) + "-" + rawToday.getDate();
+    // const today = rawToday.getFullYear() + "-" + ( rawToday.getMonth() +1 ) + "-" + rawToday.getDate();
+
+    let month = (someDate) => {
+        const thisMonth = someDate.getMonth() + 1
+        if ( thisMonth < 10 )  {
+
+            return "0"+thisMonth
+        
+        } else {
+        
+            return thisMonth
+        
+        }
+    }
+
+    let day = (someDate) => {
+        const thisDay = someDate.getDate()
+        if ( thisDay < 10 )  {
+
+            return "0"+thisDay
+        
+        } else {
+        
+            return thisDay
+        
+        }
+    }
+
+    const today = rawToday.getFullYear() + "-" + month(rawToday) + "-" + day(rawToday);
 
     const baseURL = `https://performancemanager5.successfactors.eu/sf/timesheet?bplte_company=SAP#/timerecords/11516741/${today}`;
+    // const baseURL = `https://performancemanager5.successfactors.eu/sf/timesheet?bplte_company=SAP#/timerecords/11516741/2022-01-06`;
     
+    await page.goto(baseURL);
+    await page.waitForTimeout(8000);
+    // debugger;
+
     await page.goto(baseURL);
     await page.waitForTimeout(8000);
     // debugger;
@@ -52,22 +88,25 @@ async function submitTimesheet() {
     await page.waitForTimeout(5000)
     // debugger;
     
-    for ( let d = 2; d < arrayOfDays.length-2; d++ ) {
+    // Set d = 0 to start submitting time from Monday
+    for ( let d = 2; d < arrayOfDays.length; d++ ) {
 
         await page.waitForTimeout(3000);
         await page.click(arrayOfDays[d]);
+        await page.waitForTimeout(3000);
         await page.waitForSelector(selectorApplyTime);
         await page.click(selectorApplyTime);
-        await page.waitForTimeout(1000);
+        await page.waitForTimeout(8000);
         await page.click(selectorAllowances);
-        await page.waitForTimeout(2500);
+        await page.waitForTimeout(5000);
+        // debugger;
         await page.click(selectorUpdateTime);
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(5000);
 
     }
-    debugger;
     await page.click(selectorSubmitTime);
-    await page.waitForTimeout(3000);
+    await page.waitForTimeout(5000);
+    debugger;
     await page.click(selectorConfirmSubmission);
     await page.waitForTimeout(5000);
     console.log("Timesheet successfully submitted");

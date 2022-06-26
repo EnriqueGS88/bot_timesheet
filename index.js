@@ -52,27 +52,29 @@ async function submitTimesheet() {
     const today = rawToday.getFullYear() + "-" + month(rawToday) + "-" + day(rawToday);
 
     const baseURL = `https://performancemanager5.successfactors.eu/sf/timesheet?bplte_company=SAP#/timerecords/11516741/${today}`;
-    // const baseURL = `https://performancemanager5.successfactors.eu/sf/timesheet?bplte_company=SAP#/timerecords/11516741/2022-01-06`;
+    // const baseURL = `https://performancemanager5.successfactors.eu/sf/timesheet?bplte_company=SAP#/timerecords/11516741/2022-06-13`;
     
     await page.goto(baseURL);
-    await page.waitForTimeout(8000);
+    await page.waitForTimeout(3000);
     // debugger;
 
     await page.goto(baseURL);
-    await page.waitForTimeout(8000);
+    await page.waitForTimeout(3000);
     // debugger;
     
     // Selectors
     const selectorApplyTime = 'span[id="__component1---timeRecordingView--applyPlannedTimeBtnExpanded-content"]';
-    const selectorAllowances = 'bdi[id="__component1---timeRecordingView--recordsAllowance--add-BDI-content"]';
-    const selectorUpdateTime = 'span[id="__component1---timeRecordingView--btnSaveTimeRecords-content"]';
-    const selectorDay1 = 'tr[id="__item6-__component1---weekSummaryView--daysSummaryTableFragement--daysSummaryTable-0"]';
-    const selectorDay2 = 'tr[id="__item6-__component1---weekSummaryView--daysSummaryTableFragement--daysSummaryTable-1"]';
-    const selectorDay3 = 'tr[id="__item6-__component1---weekSummaryView--daysSummaryTableFragement--daysSummaryTable-2"]';
-    const selectorDay4 = 'tr[id="__item6-__component1---weekSummaryView--daysSummaryTableFragement--daysSummaryTable-3"]';
-    const selectorDay5 = 'tr[id="__item6-__component1---weekSummaryView--daysSummaryTableFragement--daysSummaryTable-4"]';
-    const selectorSubmitTime = 'bdi[id="__component1---weekSummaryView--submitTimeSheetBtnExpanded-BDI-content"]';
-    const selectorConfirmSubmission = 'bdi[id="__component1---weekSummaryView--btnConfirmSubmitDialog-BDI-content"]';
+    const selectorAllowances = 'span[id="__component1---timeRecordingView--recordsAllowance--add-inner"]';
+    const selectorUpdateTime = 'bdi[id="__component1---timeRecordingView--btnSaveTimeRecords-BDI-content"]';
+    const selectorDay1 = 'tr[id="__item6-__component1---timeSheetSummaryView--daysSummaryTableFragement--daysSummaryTable-0"]';
+    const selectorDay2 = 'tr[id="__item6-__component1---timeSheetSummaryView--daysSummaryTableFragement--daysSummaryTable-1"]';
+    const selectorDay3 = 'tr[id="__item6-__component1---timeSheetSummaryView--daysSummaryTableFragement--daysSummaryTable-2"]';
+    const selectorDay4 = 'tr[id="__item6-__component1---timeSheetSummaryView--daysSummaryTableFragement--daysSummaryTable-3"]';
+    const selectorDay5 = 'tr[id="__item6-__component1---timeSheetSummaryView--daysSummaryTableFragement--daysSummaryTable-4"]';
+    
+    const selectorSubmitTime = 'bdi[id="__component1---timeSheetSummaryView--submitTimeSheetBtnExpanded-BDI-content"]';
+    const selectorConfirmSubmission = 'bdi[id="__component1---timeSheetSummaryView--btnConfirmSubmitDialog-BDI-content"]';
+
     const arrayOfDays = [
         selectorDay1,
         selectorDay2,
@@ -89,7 +91,7 @@ async function submitTimesheet() {
     // debugger;
     
     // Set d = 0 to start submitting time from Monday
-    for ( let d = 2; d < arrayOfDays.length; d++ ) {
+    for ( let d = 0; d < arrayOfDays.length; d++ ) {
 
         await page.waitForTimeout(3000);
         await page.click(arrayOfDays[d]);
@@ -97,6 +99,7 @@ async function submitTimesheet() {
         await page.waitForSelector(selectorApplyTime);
         await page.click(selectorApplyTime);
         await page.waitForTimeout(8000);
+        await page.waitForSelector(selectorAllowances);
         await page.click(selectorAllowances);
         await page.waitForTimeout(5000);
         // debugger;
